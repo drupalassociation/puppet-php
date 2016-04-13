@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.8.7.6
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!file.README.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="puppet_manifest_list_link"
+        href="puppet_manifest_list.html">
+      Puppet Manifest List
+    </a>
+  
+    <a class="full_list_link" id="puppet_plugin_list_link"
+        href="puppet_plugin_list.html">
+      Puppet Plugin List
+    </a>
+  
+    <a class="full_list_link" id="puppet_type_list_link"
+        href="puppet_type_list.html">
+      Puppet Type List
+    </a>
+  
+    <a class="full_list_link" id="puppet_provider_list_link"
+        href="puppet_provider_list.html">
+      Puppet Provider List
+    </a>
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'>
+<h1 id="label-mayflower%2Fphp+Puppet+Module">mayflower/php Puppet Module</h1>
+
+<p><a href="https://github.com/mayflower/puppet-php"><img
+src="https://badge.fury.io/gh/mayflower%2Fpuppet-php.svg"></a> <a
+href="https://travis-ci.org/mayflower/puppet-php"><img
+src="https://travis-ci.org/mayflower/puppet-php.svg?branch=master"></a></p>
+
+<p>mayflower/php is a Puppet module for managing PHP with a strong focus on
+php-fpm. The module aims to use sane defaults for the supported
+architectures. We strive to support all recent versions of Debian, Ubuntu,
+RedHat/CentOS, openSUSE/SLES and FreeBSD. Managing Apache with
+<code>mod_php</code> is not supported.</p>
+
+<p>This originally was a fork of <a
+href="https://github.com/jippi/puppet-php">jippi/puppet-php</a> (nodes-php
+on Puppet Forge) but has since been rewritten in large parts.</p>
+
+<h2 id="label-Usage">Usage</h2>
+
+<p>Quickest way to get started is simply <code>include</code>&#39;ing the
+<code><em>php</code> class</em>.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_include'>include</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>::php</span><span class='tstring_end'>&#39;</span></span></code></pre>
+
+<p>Or, you can override defaults and specify additional custom configurations
+by declaring <code>class { &#39;::php&#39;: }</code> with parameters:</p>
+
+<pre class="code ruby"><code class="ruby">class { &#39;::php&#39;:
+  ensure       =&gt; latest,
+  manage_repos =&gt; true,
+  fpm          =&gt; true,
+  dev          =&gt; true,
+  composer     =&gt; true,
+  pear         =&gt; true,
+  phpunit      =&gt; false,
+}
+</code></pre>
+
+<p>There are more configuration options available. Please refer to the
+auto-generated documention at <a
+href="http://php.puppet.mayflower.de">php.puppet.mayflower.de</a>/.</p>
+
+<h3 id="label-Defining+php.ini+settings">Defining <code>php.ini</code> settings</h3>
+
+<p>PHP configuration parameters in <code>php.ini</code> files can be defined
+as parameter <code>settings</code> on the main <code>php</code> class, or
+<code>php::fpm</code> / <code>php::cli</code> classes, or
+<code>php::extension</code> resources for each component independently.</p>
+
+<p>These settings are written into their respective <code>php.ini</code> file.
+Global settings in <code>php::settings</code> are merged with the settings
+of all components. Please note that settings of extensions are always
+independent.</p>
+
+<p>In the following example the PHP options and timezone will be set in all
+PHP configurations, i.e. the PHP cli application and all php-fpm pools.</p>
+
+<pre class="code ruby"><code class="ruby">class { &#39;::php&#39;:
+    settings   =&gt; {
+      &#39;PHP/max_execution_time&#39;  =&gt; &#39;90&#39;,
+      &#39;PHP/max_input_time&#39;      =&gt; &#39;300&#39;,
+      &#39;PHP/memory_limit&#39;        =&gt; &#39;64M&#39;,
+      &#39;PHP/post_max_size&#39;       =&gt; &#39;32M&#39;,
+      &#39;PHP/upload_max_filesize&#39; =&gt; &#39;32M&#39;,
+      &#39;Date/date.timezone&#39;      =&gt; &#39;Europe/Berlin&#39;,
+    },
+  }
+</code></pre>
+
+<h3 id="label-Installing+extensions">Installing extensions</h3>
+
+<p>PHP configuration parameters in <code>php.ini</code> files can be defined
+as parameter <code>extensions</code> on the main <code>php</code> class.
+They are activated for all activated SAPIs.</p>
+
+<pre class="code ruby"><code class="ruby">class { &#39;::php&#39;:
+    extensions =&gt; {
+      bcmath    =&gt; { },
+      imagick   =&gt; {
+        provider =&gt; pecl,
+      },
+      xmlrpc    =&gt; { },
+      memcached =&gt; {
+        provider        =&gt; &#39;pecl&#39;,
+        header_packages =&gt; [ &#39;libmemcached-devel&#39;, ],
+      },
+      apc       =&gt; {
+        provider =&gt; &#39;pecl&#39;,
+        settings =&gt; {
+          &#39;apc/stat&#39;       =&gt; &#39;1&#39;,
+          &#39;apc/stat_ctime&#39; =&gt; &#39;1&#39;,
+        },
+      },
+      
+    },
+  }
+</code></pre>
+
+<p>See <a href="http://php.puppet.mayflower.de/php/extension.html">the
+documentation</a> of the <code>php::extension</code> resource for all
+available parameters and default values.</p>
+
+<h3 id="label-Defining+php-fpm+pools">Defining php-fpm pools</h3>
+
+<p>If different php-fpm pools are required, you can use
+<code>php::fpm::pool</code> defined resource type. A single pool called
+<code>www</code> will be configured by default. Specify additional pools
+like so:</p>
+
+<pre class="code ruby"><code class="ruby">php::fpm::pool { &#39;www2&#39;:
+    listen =&gt; &#39;127.0.1.1:9000&#39;,
+  }
+</code></pre>
+
+<p>For an overview of all possible parameters for <code>php::fpm::pool</code>
+resources please see <a
+href="http://php.puppet.mayflower.de/php/fpm/pool.html">its
+documention</a>.</p>
+
+<h3 id="label-Alternative+examples+using+Hiera">Alternative examples using Hiera</h3>
+
+<p>Alternative to the Puppet DSL code examples above, you may optionally
+define your PHP configuration using Hiera.</p>
+
+<p>Below are all the examples you see above, but defined in YAML format for
+use with Hiera.</p>
+
+<pre class="code ruby"><code class="ruby">---
+php::ensure: latest
+php::manage_repos: true
+php::fpm: true
+php::dev: true
+php::composer: true
+php::pear: true
+php::phpunit: false
+php::settings:
+  &#39;PHP/max_execution_time&#39;: &#39;90&#39;
+  &#39;PHP/max_input_time&#39;: &#39;300&#39;
+  &#39;PHP/memory_limit&#39;: &#39;64M&#39;
+  &#39;PHP/post_max_size&#39;: &#39;32M&#39;
+  &#39;PHP/upload_max_filesize&#39;: &#39;32M&#39;
+  &#39;Date/date.timezone&#39;: &#39;Europe/Berlin&#39;
+php::extensions:
+  bcmath: {}
+  xmlrpc: {}
+  imagick:
+    provider: pecl
+  memcached:
+    provider: pecl
+    header_packages:
+      - libmemcached-dev
+  apc:
+    provider: pecl
+    settings:
+      &#39;apc/stat&#39;: 1
+      &#39;apc/stat_ctime&#39;: 1
+php::fpm::pools:
+  www2:
+    listen: &#39;127.0.1.1:9000&#39;</code></pre>
+
+<h2 id="label-Notes">Notes</h2>
+
+<h3 id="label-Debian+squeeze+%26+Ubuntu+precise+come+with+PHP+5.3">Debian squeeze &amp; Ubuntu precise come with PHP 5.3</h3>
+
+<p>On Debian-based systems, we use <code>php5enmod</code> to enable
+extension-specific configuration. This script is only present in
+<code>php5</code> packages beginning with version 5.4. Furthermore, PHP 5.3
+is not supported by upstream anymore.</p>
+
+<p>We strongly suggest you use a recent PHP version, even if you&#39;re using
+an older though still supported distribution release. Our default is to
+have <code>php::manage_repos</code> enabled to add apt sources for <a
+href="http://www.dotdeb.org/">Dotdeb</a> on Debian and <a
+href="https://launchpad.net/~ondrej/+archive/ubuntu/php5/">ppa:ondrej/php5</a>
+on Ubuntu with packages for the current stable PHP version closely tracking
+upstream.</p>
+
+<p>To use an alternate PPA, Ondrej&#39;s PHP 5.6 for example, use the below
+hiera snippet <code>yaml php::repo::ubuntu::ppa: &#39;ondrej/php5-5.6&#39;
+php::manage_repos: true </code></p>
+
+<h3 id="label-Apache+support">Apache support</h3>
+
+<p>Apache with <code>mod_php</code> is not supported by this module. Please
+use <a
+href="https://forge.puppetlabs.com/puppetlabs/apache">puppetlabs/apache</a>
+instead.</p>
+
+<p>We prefer using php-fpm. You can find an example Apache vhost in
+<code>manifests/apache_vhost.pp</code> that shows you how to use
+<code>mod_proxy_fcgi</code> to connect to php-fpm.</p>
+
+<h3 id="label-Facts">Facts</h3>
+
+<p>We deliver a <code>phpversion</code> fact with this module. This is
+explicitly <strong>NOT</strong> intended to be used within your puppet
+manifests as it will only work on your second puppet run. Its intention is
+to make querying PHP versions per server easy via PuppetDB.</p>
+
+<h3 id="label-FreeBSD+support">FreeBSD support</h3>
+
+<p>On FreeBSD systems we purge the system-wide <code>extensions.ini</code> in
+favour of per-module configuration files.</p>
+
+<p>Please also note that support for Composer and PHPUnit on FreeBSD is
+untested and thus likely incomplete.</p>
+
+<h3 id="label-Running+the+test+suite">Running the test suite</h3>
+
+<p>To run the tests install the ruby dependencies with <code>bundler</code>
+and execute <code>rake</code>:</p>
+
+<pre class="code ruby"><code class="ruby">bundle install --path vendor/bundle
+bundle exec rake</code></pre>
+
+<h2 id="label-Bugs+%26+New+Features">Bugs &amp; New Features</h2>
+
+<p>If you happen to stumble upon a bug, please feel free to create a pull
+request with a fix (optionally with a test), and a description of the bug
+and how it was resolved.</p>
+
+<p>Or if you&#39;re not into coding, simply create an issue adding steps to
+let us reproduce the bug and we will happily fix it.</p>
+
+<p>If you have a good idea for a feature or how to improve this module in
+general, please create an issue to discuss it. We are very open to
+feedback. Pull requests are always welcome.</p>
+
+<p>We hate orphaned and unmaintained Puppet modules as much as you do and
+therefore promise that we will continue to maintain this module and keep
+response times to issues short. If we happen to lose interest, we will
+write a big fat warning into this README to let you know.</p>
+
+<h2 id="label-License">License</h2>
+
+<p>The project is released under the permissive MIT license.</p>
+
+<p>The source can be found at <a
+href="https://github.com/mayflower/puppet-php/">github.com/mayflower/puppet-php</a>.</p>
+
+<p>This Puppet module is being actively maintained by some fellow puppeteers
+at <a href="https://mayflower.de">Mayflower GmbH</a>.</p>
+</div></div>
+
+    <div id="footer">
+  Generated on Wed Apr 13 16:23:07 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.6 (ruby-2.1.6).
+</div>
+
+  </body>
+</html>
