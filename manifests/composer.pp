@@ -34,13 +34,6 @@ class php::composer (
   validate_bool($auto_update)
   validate_re("x${max_age}", '^x\d+$')
 
-  ensure_packages(['wget'], {
-    ensure   => $ensure,
-    alias    => 'wget',
-    provider => $provider,
-    source   => $source,
-  })
-
   exec { 'download composer':
     command => "wget ${source} -O ${path}",
     creates => $path,
